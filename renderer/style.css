@@ -1,0 +1,110 @@
+:root{
+	--bg1: #0f1724;
+	--panel: rgba(255,255,255,0.04);
+	--accent: #6dd3ff;
+	--muted: #9aa4b2;
+}
+html,body{height:100%}
+/* prevent vertical scrolling of the whole app */
+html, body { overflow: hidden }
+body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin: 0; display: flex; flex-direction: column; height: 100vh; background: linear-gradient(180deg,#07101a 0%, #051021 100%); color: #e6eef6 }
+
+header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); backdrop-filter: blur(6px); box-shadow: 0 6px 18px rgba(3,6,13,0.6); }
+header .brand{display:flex;align-items:center;gap:12px}
+.logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#3b82f6);display:flex;align-items:center;justify-content:center;font-weight:700;color:#072033}
+.titleWrap h1{margin:0;font-size:18px}
+.subtitle{font-size:12px;color:var(--muted);margin-top:2px}
+.headerActions button.primary{background:linear-gradient(90deg,#4fd1c5,#3b82f6);color:#04202a;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600}
+.headerActions button.primary:hover{filter:brightness(1.02)}
+/* header action layout: keep icons on one row */
+.headerActions{display:flex;align-items:center;gap:12px;flex-wrap:nowrap}
+/* small icon-only header buttons */
+.headerActions button.icon{width:44px;height:44px;padding:8px;border-radius:10px;background:linear-gradient(90deg,#ffffff,#ffffff);display:flex;align-items:center;justify-content:center}
+.headerActions button.icon svg{width:20px;height:20px}
+.headerActions .headerControls{display:flex;gap:8px;margin-right:8px}
+
+/* small numeric badge for review button */
+.headerActions button.icon{position:relative}
+.headerActions .badge{position:absolute;right:-6px;top:-6px;min-width:18px;height:18px;padding:0 6px;background:#d64545;color:#fff;border-radius:999px;font-size:12px;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,0.45)}
+
+/* Ensure header icon SVGs use the same stroke/fill as the Open Folder icon */
+.headerActions button.icon svg * {
+	stroke: #04202a !important;
+	fill: #fff !important;
+}
+
+main#container { display: grid; grid-template-columns: 220px 1fr; grid-template-rows: 1fr minmax(96px, 160px); gap: 18px; padding: 20px; flex: 1; height: calc(100vh - 72px); box-sizing: border-box }
+
+#controls { display:flex; flex-direction:column; gap:12px; width:100%; align-self:start }
+#controls button { padding:10px; font-size:14px; display:flex; align-items:center; justify-content:center; background:linear-gradient(90deg,#0b1224, #071424); color:var(--accent); border:1px solid rgba(255,255,255,0.04); border-radius:10px }
+#controls button svg{filter:drop-shadow(0 2px 6px rgba(0,0,0,0.6))}
+#deleteCount{color:var(--muted)}
+
+#viewer { background: transparent; border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:12px; box-shadow: 0 6px 20px rgba(2,6,23,0.6); grid-column: 2 / 3; grid-row: 1 / 2; overflow:auto }
+#viewerInner{display:flex;align-items:center;justify-content:center;height:100%;position:relative}
+#mainImage{max-width:100%;max-height:72vh;object-fit:contain;border-radius:10px;box-shadow:0 10px 40px rgba(2,6,23,0.6);transition:opacity .28s ease}
+#mainImage.loading{opacity:0}
+/* numeric overlay centered at bottom of main image */
+#imageInfo{position:absolute;left:50%;transform:translateX(-50%);bottom:18px;background:rgba(2,6,13,0.6);color:#e7f0fb;padding:6px 10px;border-radius:999px;font-size:13px}
+
+#thumbRibbon{display:flex;align-items:center;gap:10px;padding:calc(12px * 0.7) 24px;border-radius:10px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); overflow-x:auto; overflow-y:hidden; grid-column: 1 / -1; grid-row: 2 / 3; max-height:160px; box-sizing:border-box }
+#thumbRibbon img{width:140px;height:88px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
+#thumbRibbon img:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(3,9,20,0.6)}
+#thumbRibbon img.selected{border-color:rgba(47,128,237,0.9);transform:scale(1.02)}
+#thumbRibbon img.to-delete{outline:4px solid rgba(220,40,40,0.12);box-shadow:0 0 0 3px rgba(220,40,40,0.06)}
+
+.empty{padding:20px;color:var(--muted)}
+
+/* auto-advance animation */
+.swipe-out { transition: transform 220ms ease, opacity 220ms ease; transform: translateX(-18px) scale(0.98); opacity: 0 }
+.swipe-in { transition: transform 280ms cubic-bezier(.2,.9,.2,1), opacity 280ms ease; transform: translateX(0) scale(1); opacity: 1 }
+
+/* Responsive: collapse to single column on small screens */
+@media (max-width: 900px) {
+	main#container { grid-template-columns: 1fr; grid-template-rows: auto 1fr 120px; padding: 12px }
+	#controls { flex-direction:row; gap:8px; width:100%; order:0 }
+	#viewer { grid-column: 1 / -1; grid-row: 2 / 3 }
+	#thumbRibbon { grid-column: 1 / -1; grid-row: 3 / 4; padding:calc(8px * 0.7) }
+	#thumbRibbon img{width:100px;height:64px}
+	.logo{width:36px;height:36px}
+}
+
+/* Modal */
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal.hidden{display:none}
+.modal{background:linear-gradient(0deg, rgba(2,6,13,0.6), rgba(2,6,13,0.6))}
+.modalContent{background: #071021; border-radius:12px;padding:18px;width:90%;max-width:900px;color:#e7f0fb}
+.reviewList{display:flex;flex-wrap:wrap;gap:12px}
+.reviewItem{width:150px;display:flex;flex-direction:column;align-items:center}
+.reviewItem img{width:140px;height:90px;object-fit:cover;border-radius:8px}
+
+/* review modal thumbnail wrapper with restore overlay */
+.reviewThumb{position:relative}
+.reviewThumb img{display:block;border-radius:8px}
+/* restore button becomes a full-image overlay on hover */
+.reviewThumb .restoreBtn{
+	position:absolute;
+	left:0;
+	top:0;
+	width:100%;
+	height:100%;
+	border-radius:8px;
+	background:rgba(0,0,0,0.35);
+	border:2px solid #fff; /* white border as requested */
+	display:flex;align-items:center;justify-content:center;cursor:pointer;
+	opacity:0;transition:opacity .14s ease,background .14s ease;
+}
+.reviewThumb:hover .restoreBtn{opacity:1}
+.reviewThumb .restoreBtn svg{width:28px;height:28px}
+
+/* modal action icon-only buttons styling */
+.modalActions button{width:44px;height:44px;border-radius:8px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.modalActions button svg{width:18px;height:18px}
+/* make delete button transparent with red border instead of filled background */
+.modalActions button.danger{background:transparent;color:#d64545;border:2px solid #d64545}
+.modalActions button.busy{opacity:0.6}
+/* ensure modal action svg colors: default white, danger uses red */
+.modalActions button svg *{stroke:#fff !important;fill:none !important}
+.modalActions button.danger svg *{stroke:#d64545 !important;fill:none !important}
+.modalActions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+.danger{background:#d64545;color:#fff;border:none;padding:8px 12px;border-radius:8px}
