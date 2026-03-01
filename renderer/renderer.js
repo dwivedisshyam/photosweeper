@@ -258,8 +258,8 @@ document.addEventListener("keydown", (e) => {
     setMainImage(
       (currentIndex - 1 + currentImages.length) % currentImages.length,
     );
-  } else if (e.key && e.key.toLowerCase && e.key.toLowerCase() === "d") {
-    // 'D' shortcut: toggle current image in delete list
+  } else if (e.key === "ArrowUp") {
+    // 'Up Arrow' shortcut: toggle current image in delete list
     toggleDeleteCurrent();
   }
 });
