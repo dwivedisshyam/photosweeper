@@ -51,7 +51,7 @@ main#container { display: grid; grid-template-columns: 220px 1fr; grid-template-
 #thumbRibbon img{width:140px;height:88px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
 #thumbRibbon img:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(3,9,20,0.6)}
 #thumbRibbon img.selected{border-color:rgba(47,128,237,0.9);transform:scale(1.02)}
-#thumbRibbon img.to-delete{outline:4px solid rgba(220,40,40,0.12);box-shadow:0 0 0 3px rgba(220,40,40,0.06)}
+#thumbRibbon img.to-delete{outline:4px solid rgba(220,40,40,0.12);box-shadow:0 0 0 3px rgba(220,40,40,0.06);border:2px solid #d64545}
 
 .empty{padding:20px;color:var(--muted)}
 
@@ -74,7 +74,7 @@ main#container { display: grid; grid-template-columns: 220px 1fr; grid-template-
 .modal.hidden{display:none}
 .modal{background:linear-gradient(0deg, rgba(2,6,13,0.6), rgba(2,6,13,0.6))}
 .modalContent{background: #071021; border-radius:12px;padding:18px;width:90%;max-width:900px;color:#e7f0fb}
-.reviewList{display:flex;flex-wrap:wrap;gap:12px}
+.reviewList{display:flex;flex-wrap:wrap;gap:12px;max-height:70vh;overflow-y:auto;}
 .reviewItem{width:150px;display:flex;flex-direction:column;align-items:center}
 .reviewItem img{width:140px;height:90px;object-fit:cover;border-radius:8px}
 
