@@ -14,6 +14,29 @@ let currentImages = [];
 let currentIndex = 0;
 let deleteList = [];
 
+// Intersection Observer for lazy-loading thumbnails
+let thumbnailObserver = null;
+function initThumbnailObserver() {
+  if (thumbnailObserver) thumbnailObserver.disconnect();
+  thumbnailObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          const src = img.dataset.src;
+          if (src && !img.src) {
+            img.src = "file://" + src;
+          }
+          thumbnailObserver.unobserve(img);
+        }
+      });
+    },
+    { rootMargin: "100px" },
+  );
+  const thumbs = thumbRibbon.querySelectorAll("img[data-src]");
+  thumbs.forEach((thumb) => thumbnailObserver.observe(thumb));
+}
+
 function setMainImage(index, animate = false) {
   if (!currentImages || !currentImages.length) return;
   // clamp
@@ -91,7 +114,8 @@ function buildThumbnails(images) {
     for (let i = start; i < end; i++) {
       const src = images[i];
       const t = document.createElement("img");
-      t.src = "file://" + src;
+      // Store path in data attribute instead of loading immediately
+      t.dataset.src = src;
       t.loading = "lazy";
       t.title = src;
       if (deleteList.includes(src)) t.classList.add("to-delete");
@@ -118,6 +142,8 @@ function buildThumbnails(images) {
       setTimeout(() => appendBatch(end), 25);
     } else {
       // final buildThumbnails stats (suppressed)
+      // initialize observer after all thumbnails are added
+      initThumbnailObserver();
     }
   }
 
@@ -144,10 +170,13 @@ selectBtn.addEventListener("click", async () => {
     imageInfo.textContent = "";
     return;
   }
+  // Build thumbnails but don't load main image yet - user will click a thumbnail to load
   buildThumbnails(images);
-  setMainImage(0);
   deleteList = [];
   updateDeleteCount();
+  // Show placeholder instead of loading first image
+  mainImage.src = "";
+  imageInfo.textContent = `0 / ${currentImages.length}`;
 });
 
 function updateDeleteCount() {
